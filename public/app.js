@@ -264,8 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
     aiBubbleRow.className = 'msg-row ai-side';
     aiBubbleRow.id = 'active-streaming-row';
     aiBubbleRow.innerHTML = `
-      <div class="ai-avatar">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <div class="ai-avatar" style="padding: 0; background: transparent; box-shadow: none;">
+        <img src="logo.png" style="width: 100%; height: 100%; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);">
       </div>
       <div class="chat-bubble">
         <span class="typing-caret"></span>
@@ -354,8 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const parsedContent = parseMarkdownToHtml(text);
     row.innerHTML = `
-      <div class="ai-avatar">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <div class="ai-avatar" style="padding: 0; background: transparent; box-shadow: none;">
+        <img src="logo.png" style="width: 100%; height: 100%; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);">
       </div>
       <div class="chat-bubble">${parsedContent}</div>
     `;
