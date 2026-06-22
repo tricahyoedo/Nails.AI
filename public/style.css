@@ -439,14 +439,95 @@ body {
 }
 
 /* Sidebar Footer */
-.sidebar-footer {
-  padding: 16px;
+/* Sidebar Footer: Collapsible Settings */
+.sidebar-footer-settings {
   border-top: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+/* Collapsible Settings Panel (hidden by default) */
+.settings-collapse-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-sidebar);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.settings-collapse-panel.open {
+  max-height: 200px;
+  opacity: 1;
+  padding: 16px;
+}
+
+.settings-collapse-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-collapse-item label {
   font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
-  text-align: center;
-  background: rgba(12, 13, 22, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.settings-collapse-item select,
+.settings-collapse-item input[type="range"] {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 12px;
+  padding: 6px 8px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+}
+
+.settings-collapse-item input[type="range"] {
+  padding: 4px 0;
+  accent-color: var(--accent-purple);
+}
+
+/* Settings Trigger Button at Bottom */
+.settings-footer-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.settings-footer-btn:hover {
+  color: var(--text-bright);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.settings-footer-btn .settings-chevron {
+  margin-left: auto;
+  font-size: 11px;
+  transition: transform 0.3s ease;
+}
+
+.settings-footer-btn.open .settings-chevron {
+  transform: rotate(180deg);
 }
 
 /* -------------------------------------------------------------

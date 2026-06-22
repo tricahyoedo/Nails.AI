@@ -525,56 +525,71 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // -------------------------------------------------------------
-  // CONFIGURATION MODAL (SETTINGS PANEL)
+  // COLLAPSIBLE SETTINGS PANEL (SIDEBAR FOOTER)
   // -------------------------------------------------------------
 
-  settingsTrigger.addEventListener('click', () => {
-    settingsModal.classList.remove('hidden');
-  });
+  const settingsCollapsePanel = document.getElementById('settings-collapse-panel');
+  const settingsChevron = document.getElementById('settings-chevron');
 
-  function closeSettings() {
-    settingsModal.classList.add('hidden');
+  // Inline settings elements
+  const settingTemperatureInline = document.getElementById('setting-temperature-inline');
+  const temperatureValInline = document.getElementById('temperature-val-inline');
+
+  // Sync inline settings from stored settings
+  if (settingTemperatureInline && aiSettings.temperature) {
+    settingTemperatureInline.value = aiSettings.temperature;
+    if (temperatureValInline) temperatureValInline.textContent = aiSettings.temperature;
   }
 
-  closeSettingsBtn.addEventListener('click', closeSettings);
-  cancelSettingsBtn.addEventListener('click', closeSettings);
-
-  settingTemperature.addEventListener('input', function() {
-    temperatureVal.textContent = this.value;
+  // Toggle collapse on settings button click
+  settingsTrigger.addEventListener('click', () => {
+    const isOpen = settingsCollapsePanel.classList.toggle('open');
+    settingsTrigger.classList.toggle('open', isOpen);
   });
 
-  toggleKeyVisibility.addEventListener('click', () => {
-    const type = settingApiKey.getAttribute('type') === 'password' ? 'text' : 'password';
-    settingApiKey.setAttribute('type', type);
-    
-    const icon = toggleKeyVisibility.querySelector('i');
-    if (type === 'text') {
-      icon.className = 'fa-solid fa-eye';
-    } else {
-      icon.className = 'fa-solid fa-eye-slash';
-    }
-  });
+  // Live update temperature display and save
+  if (settingTemperatureInline) {
+    settingTemperatureInline.addEventListener('input', function() {
+      if (temperatureValInline) temperatureValInline.textContent = this.value;
+      aiSettings.temperature = parseFloat(this.value);
+      localStorage.setItem('nails_ai_settings', JSON.stringify(aiSettings));
+    });
+  }
 
-  saveSettingsBtn.addEventListener('click', () => {
-    aiSettings.model = settingAiModel.value;
-    aiSettings.temperature = parseFloat(settingTemperature.value);
-    aiSettings.apiKey = settingApiKey.value.trim();
+  // Old modal temperature slider (keep for modal if still present)
+  if (settingTemperature) {
+    settingTemperature.addEventListener('input', function() {
+      if (temperatureVal) temperatureVal.textContent = this.value;
+    });
+  }
 
-    localStorage.setItem('nails_ai_settings', JSON.stringify(aiSettings));
-    updateModelDisplay();
-    closeSettings();
+  if (toggleKeyVisibility) {
+    toggleKeyVisibility.addEventListener('click', () => {
+      const type = settingApiKey.getAttribute('type') === 'password' ? 'text' : 'password';
+      settingApiKey.setAttribute('type', type);
+      
+      const icon = toggleKeyVisibility.querySelector('i');
+      if (type === 'text') {
+        icon.className = 'fa-solid fa-eye';
+      } else {
+        icon.className = 'fa-solid fa-eye-slash';
+      }
+    });
+  }
 
-    showGlobalNotification(`⚙️ <strong>Sistem Terkonfigurasi:</strong> Model AI diubah ke <strong>${aiSettings.model === 'nails-v2' ? 'Nails Engine v2' : aiSettings.model.toUpperCase()}</strong>!`);
-  });
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener('click', () => {
+      if (settingAiModel) aiSettings.model = settingAiModel.value;
+      if (settingTemperature) aiSettings.temperature = parseFloat(settingTemperature.value);
+      if (settingApiKey) aiSettings.apiKey = settingApiKey.value.trim();
+
+      localStorage.setItem('nails_ai_settings', JSON.stringify(aiSettings));
+      showGlobalNotification(`⚙️ <strong>Pengaturan Disimpan!</strong>`);
+    });
+  }
 
   function updateModelDisplay() {
-    if (aiSettings.model === 'nails-v2') {
-      activeModelNameEl.textContent = 'Nails Engine v2';
-    } else if (aiSettings.model === 'groq-llama') {
-      activeModelNameEl.textContent = 'Groq Llama 3 Model';
-    } else {
-      activeModelNameEl.textContent = 'Claude 3.5 Sonnet Model';
-    }
+    // activeModelNameEl removed from UI, no-op
   }
 
   // -------------------------------------------------------------

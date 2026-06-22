@@ -46,12 +46,7 @@
           <img src="logo.png" alt="Nails.AI Logo" style="width: 42px; height: 42px; border-radius: 8px; object-fit: cover;">
         </div>
         <div class="brand-texts">
-          <div class="brand-header-row">
-            <h2 class="brand-title-main">Nails<span>.AI</span></h2>
-            <button class="settings-gear-btn" id="settings-trigger" title="Buka Konfigurasi AI">
-              <i class="fa-solid fa-gear"></i>
-            </button>
-          </div>
+          <h2 class="brand-title-main">Nails<span>.AI</span></h2>
           <span class="brand-tag">v2.0 Premium</span>
         </div>
       </div>
@@ -82,9 +77,28 @@
         </div>
       </div>
 
-      <!-- Sidebar Footer -->
-      <div class="sidebar-footer">
-        Built with ❤️ by Nails.AI
+      <!-- Sidebar Footer: Collapsible Settings -->
+      <div class="sidebar-footer-settings">
+        <!-- Collapsible Settings Panel -->
+        <div class="settings-collapse-panel" id="settings-collapse-panel">
+          <div class="settings-collapse-item">
+            <label>Model</label>
+            <select id="setting-ai-model-inline">
+              <option value="nails-v2">Nails Engine v2</option>
+            </select>
+          </div>
+          <div class="settings-collapse-item">
+            <label>Temperature: <span id="temperature-val-inline">0.7</span></label>
+            <input type="range" id="setting-temperature-inline" min="0" max="1" step="0.1" value="0.7">
+          </div>
+        </div>
+
+        <!-- Settings Toggle Button -->
+        <button class="settings-footer-btn" id="settings-trigger" title="Pengaturan">
+          <i class="fa-solid fa-gear"></i>
+          <span>Pengaturan</span>
+          <i class="fa-solid fa-chevron-up settings-chevron" id="settings-chevron"></i>
+        </button>
       </div>
     </aside>
 
