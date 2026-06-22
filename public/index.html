@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nails.AI - Generative AI Assistant Terminal</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <!-- SEO Optimization -->
+  <meta name="description" content="Nails.AI adalah asisten kecerdasan buatan (Generative AI) real-time tercanggih yang dirancang untuk pemrograman, penulisan kreatif, pemecahan masalah, dan riset sains.">
+  <meta name="keywords" content="Nails.AI, AI Assistant, ChatGPT Indonesia, Gemini Indonesia, AI Programmer, Chatbot Pintar">
+  <meta name="author" content="Nails.AI Team">
+
+  <!-- Premium Web Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Free Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cybernetic Backdrop Overlays -->
+  <div class="cyber-grid-overlay"></div>
+  <div class="glow-sphere-1"></div>
+  <div class="glow-sphere-2"></div>
+
+  <!-- Real-time global notification feed (Toast-like alert) -->
+  <div id="global-broadcast-banner" class="global-banner hidden">
+    <div class="banner-content">
+      <i class="fa-solid fa-brain banner-icon"></i>
+      <span id="banner-text">Nails.AI Active</span>
+    </div>
+  </div>
+
+  <div class="app-layout-wrapper">
+    
+    <!-- LEFT SIDEBAR: THREADS & HISTORICAL LOGS (EXACT DESIGN MATCH) -->
+    <aside class="sidebar-panel">
+      <!-- Logo Brand Section -->
+      <div class="sidebar-brand-wrapper">
+        <div class="brand-square" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+          <img src="logo.png" alt="Nails.AI Logo" style="width: 42px; height: 42px; border-radius: 10px; object-fit: cover; box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);">
+        </div>
+        <div class="brand-texts">
+          <div class="brand-header-row">
+            <h2 class="brand-title-main">Nails<span>.AI</span></h2>
+            <button class="settings-gear-btn" id="settings-trigger" title="Buka Konfigurasi AI">
+              <i class="fa-solid fa-gear"></i>
+            </button>
+          </div>
+          <span class="brand-tag">v2.0 Premium</span>
+        </div>
+      </div>
+
+      <!-- Obrolan Baru Action Button -->
+      <button class="new-chat-btn" id="new-chat-trigger" title="Buat obrolan baru">
+        <i class="fa-solid fa-plus"></i>
+        <span>Obrolan Baru</span>
+      </button>
+
+      <!-- Scrollable Conversation Threads -->
+      <div class="sidebar-scroll-area">
+        <!-- Render conversations dynamically -->
+        <div class="threads-list-container" id="threads-container">
+          <!-- Populated dynamically via localStorage in app.js -->
+        </div>
+
+        <!-- ENGINE SECTION -->
+        <div class="sidebar-section-group">
+          <h4 class="section-title">ENGINE</h4>
+          <div class="active-model-box">
+            <span class="active-dot-green"></span>
+            <span id="active-model-name">Nails Engine v2</span>
+          </div>
+        </div>
+
+        <!-- STATISTIK SESI SECTION -->
+        <div class="sidebar-section-group">
+          <h4 class="section-title">STATISTIK SESI</h4>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-num" id="stat-pesan">0</span>
+              <span class="stat-lbl">PESAN</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-num" id="stat-prompt">0</span>
+              <span class="stat-lbl">PROMPT</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KEMAMPUAN SECTION -->
+        <div class="sidebar-section-group">
+          <h4 class="section-title">KEMAMPUAN</h4>
+          <div class="capabilities-box">
+            <div class="cap-row">
+              <span class="cap-emoji">🧠</span>
+              <span class="cap-text">Percakapan multi-turn</span>
+            </div>
+            <div class="cap-row">
+              <span class="cap-emoji">⚡</span>
+              <span class="cap-text">Respons ultra cepat</span>
+            </div>
+            <div class="cap-row">
+              <span class="cap-emoji">💻</span>
+              <span class="cap-text">Generasi kode</span>
+            </div>
+            <div class="cap-row">
+              <span class="cap-emoji">🌐</span>
+              <span class="cap-text">Dukungan multibahasa</span>
+            </div>
+            <div class="cap-row">
+              <span class="cap-emoji">📝</span>
+              <span class="cap-text">Penulisan kreatif</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        Built with ❤️ by Nails.AI
+      </div>
+    </aside>
+
+    <!-- CENTER PANEL: DYNAMIC GENERATIVE AI TERMINAL -->
+    <main class="chat-terminal-panel">
+      
+      <!-- Welcome Centerpiece (Shown only when chat history is empty) -->
+      <div class="welcome-centerpiece" id="welcome-centerpiece">
+        <div class="welcome-logo-wrapper">
+          <div class="welcome-logo-square" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+            <img src="logo.png" alt="Nails.AI Logo" style="width: 84px; height: 84px; border-radius: 18px; object-fit: cover; box-shadow: 0 0 30px rgba(99, 102, 241, 0.8);">
+          </div>
+        </div>
+        
+        <h1 class="welcome-title">Selamat Datang di <span>Nails.AI</span></h1>
+        <p class="welcome-subtitle">Asisten AI Premium — Cerdas, Cepat, dan Andal</p>
+        
+        <div class="welcome-status-pill">
+          <span class="status-dot-green"></span>
+          <span>Online & Siap Membantu</span>
+        </div>
+
+        <!-- Recommendations Prompt Grid -->
+        <div class="welcome-cards-grid">
+          <div class="rec-card" data-prompt="Cari ide kreatif untuk project baru">
+            <div class="rec-icon">💡</div>
+            <h4>Brainstorm Ide</h4>
+            <p>Cari ide kreatif untuk project baru</p>
+          </div>
+          <div class="rec-card" data-prompt="buat fungsi async javascript fetch data dari API">
+            <div class="rec-icon">💻</div>
+            <h4>Tulis Kode</h4>
+            <p>Generate kode dalam berbagai bahasa</p>
+          </div>
+          <div class="rec-card" data-prompt="Jelaskan konsep OOP dalam pemrograman dasar">
+            <div class="rec-icon">📖</div>
+            <h4>Jelaskan Konsep</h4>
+            <p>Pelajari topik kompleks dengan mudah</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversation messages screen (shown when active thread has messages) -->
+      <div class="terminal-messages-box hidden" id="ai-chat-box">
+        <!-- Messages are rendered dynamically -->
+      </div>
+
+      <!-- Chat input panel -->
+      <div class="terminal-input-bar">
+        <div class="input-panel-wrapper">
+          <textarea id="ai-chat-input" rows="1" placeholder="Tanyakan sesuatu kepada Nails.AI..." autocomplete="off"></textarea>
+          <button class="submit-prompt-btn" id="send-ai-btn" title="Kirim prompt">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+        <p class="input-note">Nails.AI dapat membuat kesalahan. Periksa informasi penting secara mandiri.</p>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- AI CONFIGURATION MODAL (SETTINGS PANEL) -->
+  <div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-glow-bar"></div>
+      
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <i class="fa-solid fa-sliders modal-header-icon text-purple"></i>
+          <div>
+            <h3>Konfigurasi Nails.AI</h3>
+            <p>Sesuaikan parameter kecerdasan model</p>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="close-settings-btn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- API Selector -->
+        <div class="setting-item-row">
+          <label class="setting-label">AI Engine Model</label>
+          <select id="setting-ai-model" class="setting-select-field">
+            <option value="nails-v2">Nails Engine v2 (Default)</option>
+            <option value="groq-llama">Groq Llama 3 API Integration</option>
+            <option value="claude-sonnet">Claude 3.5 Sonnet Integration</option>
+          </select>
+        </div>
+
+        <!-- Temperature Slider -->
+        <div class="setting-item-row">
+          <div class="setting-label-row">
+            <label class="setting-label">Temperature (Kreativitas)</label>
+            <span class="setting-value" id="temperature-val">0.7</span>
+          </div>
+          <input type="range" id="setting-temperature" min="0.1" max="1.0" step="0.05" value="0.7" class="setting-slider">
+          <p class="setting-desc">Nilai lebih tinggi menghasilkan jawaban kreatif, nilai lebih rendah menghasilkan jawaban logis & terstruktur.</p>
+        </div>
+
+        <!-- API Key Inputs -->
+        <div class="setting-item-row">
+          <label class="setting-label">Groq API Key (Opsional)</label>
+          <div class="api-key-input-wrapper">
+            <input type="password" id="setting-api-key" class="setting-text-field" placeholder="gsk_xxxxxxxxxxxxxxxx">
+            <button class="toggle-password-btn" id="toggle-key-visibility">
+              <i class="fa-solid fa-eye-slash"></i>
+            </button>
+          </div>
+          <p class="setting-desc">Masukkan API Key pribadi Anda jika ingin menghubungkan Nails.AI ke model cloud live. Kunci disimpan lokal di browser Anda.</p>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="save-settings-btn" id="save-settings-btn">Simpan Konfigurasi</button>
+        <button class="cancel-settings-btn" id="cancel-settings-btn">Batal</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Socket.IO dependency -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Main Frontend Application script -->
+  <script src="app.js"></script>
+</body>
+</html>
