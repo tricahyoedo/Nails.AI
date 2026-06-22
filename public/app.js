@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const threadsContainer = document.getElementById('threads-container');
   const newChatTrigger = document.getElementById('new-chat-trigger');
   const settingsTrigger = document.getElementById('settings-trigger');
-  const activeModelNameEl = document.getElementById('active-model-name');
-  const statPesanEl = document.getElementById('stat-pesan');
-  const statPromptEl = document.getElementById('stat-prompt');
+  const activeModelNameEl = null; // removed from UI
+  const statPesanEl = null;
+  const statPromptEl = null;
   
   // AI Chat Terminal Elements
   const aiChatBox = document.getElementById('ai-chat-box');
@@ -179,23 +179,21 @@ document.addEventListener('DOMContentLoaded', () => {
     aiChatBox.scrollTop = aiChatBox.scrollHeight;
   }
 
-  // Reactive counters updater
+  // Session stats removed — function kept as stub to avoid errors
   function updateSessionStatistics(thread) {
-    if (!thread) {
-      statPesanEl.textContent = '0';
-      statPromptEl.textContent = '0';
-      return;
-    }
-    
-    const promptsCount = thread.messages.filter(m => m.sender === 'user').length;
-    const totalCount = thread.messages.length;
-
-    statPromptEl.textContent = promptsCount.toString();
-    statPesanEl.textContent = totalCount.toString();
+    // Stats UI removed, nothing to update
   }
 
   function renderThreadsSidebar() {
     threadsContainer.innerHTML = '';
+    const emptyState = document.getElementById('history-empty-state');
+
+    if (threads.length === 0) {
+      if (emptyState) emptyState.style.display = 'flex';
+    } else {
+      if (emptyState) emptyState.style.display = 'none';
+    }
+
     threads.forEach(t => {
       const activeClass = t.id === currentThreadId ? 'active' : '';
       const div = document.createElement('div');

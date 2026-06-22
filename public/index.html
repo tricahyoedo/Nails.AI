@@ -64,60 +64,21 @@
 
       <!-- Scrollable Conversation Threads -->
       <div class="sidebar-scroll-area">
+        <!-- History Header -->
+        <div class="history-header">
+          <i class="fa-regular fa-clock-rotate-left"></i>
+          <span>Riwayat Chat</span>
+        </div>
+
         <!-- Render conversations dynamically -->
         <div class="threads-list-container" id="threads-container">
           <!-- Populated dynamically via localStorage in app.js -->
         </div>
 
-        <!-- ENGINE SECTION -->
-        <div class="sidebar-section-group">
-          <h4 class="section-title">ENGINE</h4>
-          <div class="active-model-box">
-            <span class="active-dot-green"></span>
-            <span id="active-model-name">Nails Engine v2</span>
-          </div>
-        </div>
-
-        <!-- STATISTIK SESI SECTION -->
-        <div class="sidebar-section-group">
-          <h4 class="section-title">STATISTIK SESI</h4>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <span class="stat-num" id="stat-pesan">0</span>
-              <span class="stat-lbl">PESAN</span>
-            </div>
-            <div class="stat-card">
-              <span class="stat-num" id="stat-prompt">0</span>
-              <span class="stat-lbl">PROMPT</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- KEMAMPUAN SECTION -->
-        <div class="sidebar-section-group">
-          <h4 class="section-title">KEMAMPUAN</h4>
-          <div class="capabilities-box">
-            <div class="cap-row">
-              <span class="cap-emoji"><i class="fa-solid fa-brain"></i></span>
-              <span class="cap-text">Percakapan multi-turn</span>
-            </div>
-            <div class="cap-row">
-              <span class="cap-emoji"><i class="fa-solid fa-bolt"></i></span>
-              <span class="cap-text">Respons ultra cepat</span>
-            </div>
-            <div class="cap-row">
-              <span class="cap-emoji"><i class="fa-solid fa-code"></i></span>
-              <span class="cap-text">Generasi kode</span>
-            </div>
-            <div class="cap-row">
-              <span class="cap-emoji"><i class="fa-solid fa-globe"></i></span>
-              <span class="cap-text">Dukungan multibahasa</span>
-            </div>
-            <div class="cap-row">
-              <span class="cap-emoji"><i class="fa-solid fa-pen-nib"></i></span>
-              <span class="cap-text">Penulisan kreatif</span>
-            </div>
-          </div>
+        <!-- Empty state placeholder (shown when no threads) -->
+        <div class="history-empty-state" id="history-empty-state">
+          <i class="fa-regular fa-comment-dots"></i>
+          <p>Belum ada percakapan.<br>Mulai obrolan baru!</p>
         </div>
       </div>
 
