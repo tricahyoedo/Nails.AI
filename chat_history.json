@@ -54,5 +54,12 @@
     "prompt": "haii",
     "response": "Haiiii! Kamu masih ingin berbicara, ya? Baiklah, saya siap membicarakan tentang apa saja! Apa yang ingin kamu tahu atau bicarakan hari ini?",
     "model": "llama-3.1-8b-instant"
+  },
+  {
+    "timestamp": "2026-06-25T09:05:31.683Z",
+    "user": "NailsDev",
+    "prompt": "haii",
+    "response": "Haii! Senang bertemu denganmu! Apa yang kamu inginkan bicarakan hari ini?",
+    "model": "llama-3.1-8b-instant"
   }
 ]

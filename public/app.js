@@ -243,39 +243,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
     threads.forEach(t => {
       const activeClass = t.id === currentThreadId ? 'active' : '';
+      const pinnedClass = t.pinned ? 'pinned' : '';
       const div = document.createElement('div');
-      div.className = `thread-item ${activeClass}`;
+      div.className = `thread-item ${activeClass} ${pinnedClass}`.trim();
 
       div.innerHTML = `
         <div class="thread-title-wrapper">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" class="thread-icon" style="flex-shrink:0;">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
+          ${t.pinned ? `<svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" class="pin-indicator" style="flex-shrink:0; color: var(--accent-purple-light);"><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" class="thread-icon" style="flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`}
           <span class="thread-text">${escapeHtml(t.title)}</span>
         </div>
         <div class="thread-actions">
-          <button class="thread-action-btn edit" title="Ubah Nama">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+          <button class="thread-action-btn three-dot" title="Opsi">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+              <circle cx="12" cy="5" r="1.5"></circle>
+              <circle cx="12" cy="12" r="1.5"></circle>
+              <circle cx="12" cy="19" r="1.5"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="thread-dropdown hidden">
+          <button class="thread-dropdown-item pin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <line x1="12" y1="17" x2="12" y2="22"></line>
+              <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+            </svg>
+            <span>${t.pinned ? 'Lepas Sematan' : 'Sematkan'}</span>
+          </button>
+          <button class="thread-dropdown-item rename">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
               <path d="M12 20h9"></path>
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
             </svg>
+            <span>Ganti nama</span>
           </button>
-          <button class="thread-action-btn delete" title="Hapus Chat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+          <button class="thread-dropdown-item delete-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
+            <span>Hapus</span>
           </button>
         </div>
       `;
 
-      // Attach clicks
+      // Main click = select thread
       div.addEventListener('click', () => selectThread(t.id));
-      div.querySelector('.edit').addEventListener('click', (e) => renameThreadPrompt(t.id, e));
-      div.querySelector('.delete').addEventListener('click', (e) => deleteThread(t.id, e));
+
+      // 3-dot button toggles dropdown
+      const threeDotBtn = div.querySelector('.three-dot');
+      const dropdown = div.querySelector('.thread-dropdown');
+      threeDotBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close all other open dropdowns
+        document.querySelectorAll('.thread-dropdown:not(.hidden)').forEach(d => {
+          if (d !== dropdown) d.classList.add('hidden');
+        });
+        dropdown.classList.toggle('hidden');
+      });
+
+      div.querySelector('.pin').addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        if (!t.pinned) {
+          // Check max 3 pinned
+          const pinnedCount = threads.filter(x => x.pinned).length;
+          if (pinnedCount >= 3) {
+            showGlobalNotification('Maksimal 3 obrolan yang bisa disematkan');
+            document.querySelectorAll('.thread-dropdown:not(.hidden)').forEach(d => d.classList.add('hidden'));
+            return;
+          }
+          // Pin: move to top
+          t.pinned = true;
+          const idx = threads.findIndex(x => x.id === t.id);
+          threads.splice(idx, 1);
+          threads.unshift(t);
+        } else {
+          // Unpin: move below all other pinned threads
+          t.pinned = false;
+          const idx = threads.findIndex(x => x.id === t.id);
+          threads.splice(idx, 1);
+          const firstNonPinned = threads.findIndex(x => !x.pinned);
+          threads.splice(firstNonPinned === -1 ? threads.length : firstNonPinned, 0, t);
+        }
+
+        saveThreadsToStorage();
+        renderThreadsSidebar();
+      });
+
+      div.querySelector('.rename').addEventListener('click', (e) => renameThreadPrompt(t.id, e));
+      div.querySelector('.delete-item').addEventListener('click', (e) => deleteThread(t.id, e));
 
       threadsContainer.appendChild(div);
     });
+
+    // Close dropdown when clicking anywhere else
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.thread-dropdown:not(.hidden)').forEach(d => d.classList.add('hidden'));
+    }, { once: true });
   }
 
   newChatTrigger.addEventListener('click', () => createNewThread(true));
@@ -305,9 +369,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeThread = threads.find(t => t.id === currentThreadId);
     if (activeThread && activeThread.messages.filter(m => m.sender === 'user').length === 1 && activeThread.title === 'Obrolan Baru') {
       activeThread.title = text.length > 20 ? text.substring(0, 20) + '...' : text;
-      saveThreadsToStorage();
-      renderThreadsSidebar();
     }
+
+    // Always move the active thread to the top (non-pinned threads only)
+    const threadIdx = threads.findIndex(t => t.id === currentThreadId);
+    if (threadIdx > 0 && !activeThread.pinned) {
+      threads.splice(threadIdx, 1);
+      // Insert after all pinned threads
+      const firstNonPinned = threads.findIndex(t => !t.pinned);
+      threads.splice(firstNonPinned === -1 ? 0 : firstNonPinned, 0, activeThread);
+    }
+    saveThreadsToStorage();
+    renderThreadsSidebar();
 
     // Update active counters
     updateSessionStatistics(activeThread);
