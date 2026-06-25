@@ -153,12 +153,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const thread = threads.find(t => t.id === id);
     if (!thread) return;
 
-    const newTitle = prompt("Masukkan judul baru untuk obrolan ini:", thread.title);
-    if (newTitle && newTitle.trim()) {
-      thread.title = newTitle.trim();
-      saveThreadsToStorage();
-      renderThreadsSidebar();
+    const modal = document.getElementById('rename-modal');
+    const inputField = document.getElementById('rename-input-field');
+    const saveBtn = document.getElementById('save-rename-btn');
+    const cancelBtn = document.getElementById('cancel-rename-btn');
+
+    // Pre-fill the input with the current title
+    inputField.value = thread.title;
+    modal.classList.remove('hidden');
+    setTimeout(() => inputField.focus(), 100);
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      saveBtn.replaceWith(saveBtn.cloneNode(true));
+      cancelBtn.replaceWith(cancelBtn.cloneNode(true));
     }
+
+    document.getElementById('save-rename-btn').addEventListener('click', () => {
+      const newTitle = inputField.value.trim();
+      if (newTitle) {
+        thread.title = newTitle;
+        saveThreadsToStorage();
+        renderThreadsSidebar();
+      }
+      closeModal();
+    });
+
+    document.getElementById('cancel-rename-btn').addEventListener('click', closeModal);
+
+    inputField.onkeydown = (ev) => {
+      if (ev.key === 'Enter') document.getElementById('save-rename-btn').click();
+      if (ev.key === 'Escape') closeModal();
+    };
   }
 
   function selectThread(id) {
@@ -222,12 +248,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       div.innerHTML = `
         <div class="thread-title-wrapper">
-          <i class="fa-regular fa-message thread-icon"></i>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" class="thread-icon" style="flex-shrink:0;">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
           <span class="thread-text">${escapeHtml(t.title)}</span>
         </div>
         <div class="thread-actions">
-          <button class="thread-action-btn edit" title="Ubah Nama"><i class="fa-solid fa-pen"></i></button>
-          <button class="thread-action-btn delete" title="Hapus Chat"><i class="fa-solid fa-trash-can"></i></button>
+          <button class="thread-action-btn edit" title="Ubah Nama">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+          </button>
+          <button class="thread-action-btn delete" title="Hapus Chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
         </div>
       `;
 

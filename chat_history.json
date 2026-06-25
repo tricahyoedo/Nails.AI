@@ -40,5 +40,19 @@
     "prompt": "haii",
     "response": "Haii! Senang sekali kamu ingin berbicara lagi! Apakah kamu ingin tahu lebih banyak tentang Malin Kundang atau mungkin kamu ingin membicarakan tentang topik lain? Saya siap membantu!",
     "model": "llama-3.1-8b-instant"
+  },
+  {
+    "timestamp": "2026-06-25T08:45:21.317Z",
+    "user": "NailsDev",
+    "prompt": "haii",
+    "response": "Haiiii! Senang sekali kamu masih ingin berbicara! Apakah kamu sudah santai sekarang?",
+    "model": "llama-3.1-8b-instant"
+  },
+  {
+    "timestamp": "2026-06-25T08:45:27.722Z",
+    "user": "NailsDev",
+    "prompt": "haii",
+    "response": "Haiiii! Kamu masih ingin berbicara, ya? Baiklah, saya siap membicarakan tentang apa saja! Apa yang ingin kamu tahu atau bicarakan hari ini?",
+    "model": "llama-3.1-8b-instant"
   }
 ]
