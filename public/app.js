@@ -46,6 +46,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingApiKey = document.getElementById('setting-api-key');
   const toggleKeyVisibility = document.getElementById('toggle-key-visibility');
 
+  // Sidebar Collapse Elements
+  const sidebarPanel = document.querySelector('.sidebar-panel');
+  const appLayoutWrapper = document.querySelector('.app-layout-wrapper');
+  const collapseBtn = document.getElementById('sidebar-collapse-btn');
+  const reopenBtn = document.getElementById('sidebar-reopen-btn');
+
+  // Sidebar Collapse Logic
+  if (collapseBtn && reopenBtn) {
+    collapseBtn.addEventListener('click', () => {
+      sidebarPanel.classList.add('collapsed');
+      appLayoutWrapper.classList.add('sidebar-collapsed');
+      reopenBtn.classList.remove('hidden');
+    });
+
+    reopenBtn.addEventListener('click', () => {
+      sidebarPanel.classList.remove('collapsed');
+      appLayoutWrapper.classList.remove('sidebar-collapsed');
+      reopenBtn.classList.add('hidden');
+    });
+  }
+
   // -------------------------------------------------------------
   // INITIALIZATION & STATE RECOVERY
   // -------------------------------------------------------------

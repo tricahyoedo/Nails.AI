@@ -4,6 +4,28 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const Groq = require('groq-sdk');
+const fs = require('fs');
+
+const historyPath = path.join(__dirname, 'chat_history.json');
+
+function saveToHistoryFile(chatData) {
+  try {
+    let history = [];
+    if (fs.existsSync(historyPath)) {
+      const fileData = fs.readFileSync(historyPath, 'utf8');
+      if (fileData.trim() !== '') {
+        history = JSON.parse(fileData);
+      }
+    }
+    history.push({
+      timestamp: new Date().toISOString(),
+      ...chatData
+    });
+    fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
+  } catch (err) {
+    console.error("Gagal menyimpan riwayat chat:", err);
+  }
+}
 
 const app = express();
 const server = http.createServer(app);
@@ -363,9 +385,11 @@ io.on('connection', (socket) => {
         });
         
         // Loop through each streamed chunk asynchronously
+        let fullResponse = "";
         for await (const chunk of stream) {
           const chunkText = chunk.choices[0]?.delta?.content || '';
           if (chunkText) {
+            fullResponse += chunkText;
             socket.emit('prompt-chunk', {
               chatId: data.chatId,
               text: chunkText
@@ -375,6 +399,14 @@ io.on('connection', (socket) => {
 
         // Notify client stream completed
         socket.emit('prompt-end', { chatId: data.chatId });
+        
+        // Simpan ke file chat_history.json
+        saveToHistoryFile({
+          user: data.user,
+          prompt: prompt,
+          response: fullResponse,
+          model: selectedModel
+        });
 
       } catch (error) {
         console.error("Groq API stream error:", error);
@@ -387,11 +419,11 @@ io.on('connection', (socket) => {
         });
         
         // Gracefully fallback to local knowledge engine
-        streamLocalResponse(prompt, data.chatId, socket);
+        streamLocalResponse(prompt, data.chatId, socket, data.user);
       }
     } else {
       // Default offline/mock mode (Heuristic router using custom localized database)
-      streamLocalResponse(prompt, data.chatId, socket);
+      streamLocalResponse(prompt, data.chatId, socket, data.user);
     }
   });
 
@@ -402,7 +434,7 @@ io.on('connection', (socket) => {
 });
 
 // Reusable word streamer for local knowledge items
-function streamLocalResponse(prompt, chatId, socket) {
+function streamLocalResponse(prompt, chatId, socket, user) {
   const promptLower = prompt.toLowerCase();
   let responseText = RESPONSES_DATABASE.fallback;
   
@@ -438,6 +470,14 @@ function streamLocalResponse(prompt, chatId, socket) {
       setTimeout(sendNextWord, 45); // Natural fluid speed
     } else {
       socket.emit('prompt-end', { chatId: chatId });
+      
+      // Simpan ke file chat_history.json
+      saveToHistoryFile({
+        user: user || 'Anonymous',
+        prompt: prompt,
+        response: responseText,
+        model: 'nails-local-heuristic'
+      });
     }
   }
 

@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- FontAwesome Free Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- FontAwesome Pro Icons (untuk support fa-light) -->
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
 
   <!-- Main Styling -->
   <link rel="stylesheet" href="style.css">
@@ -49,6 +49,10 @@
           <h2 class="brand-title-main">Nails<span>.AI</span></h2>
           <span class="brand-tag">v2.0 Premium</span>
         </div>
+        <!-- Sidebar Collapse Toggle -->
+        <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" title="Sembunyikan Sidebar">
+          <i class="fa-light fa-sidebar"></i>
+        </button>
       </div>
 
       <!-- Obrolan Baru Action Button -->
@@ -104,6 +108,11 @@
 
     <!-- CENTER PANEL: DYNAMIC GENERATIVE AI TERMINAL -->
     <main class="chat-terminal-panel">
+      
+      <!-- Floating Reopen Sidebar Button -->
+      <button class="sidebar-reopen-btn hidden" id="sidebar-reopen-btn" title="Buka Sidebar">
+        <i class="fa-light fa-sidebar"></i>
+      </button>
       
       <!-- Welcome Centerpiece (Shown only when chat history is empty) -->
       <div class="welcome-centerpiece" id="welcome-centerpiece">

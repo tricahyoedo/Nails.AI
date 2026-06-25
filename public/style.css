@@ -92,7 +92,13 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
-  transition: var(--transition-smooth);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.sidebar-panel.collapsed {
+  width: 0;
+  border-right: none;
 }
 
 /* Brand header panel */
@@ -101,6 +107,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
+  width: 280px; /* fixed width to prevent wrapping during collapse */
 }
 
 .brand-square {
@@ -123,6 +130,23 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
+}
+
+.sidebar-collapse-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-collapse-btn:hover {
+  color: var(--text-bright);
 }
 
 .brand-header-row {
@@ -540,6 +564,36 @@ body {
   background: radial-gradient(circle at top, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
   height: 100%;
   position: relative;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-reopen-btn {
+  position: absolute;
+  top: 24px;
+  left: 20px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 100;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-reopen-btn:hover {
+  color: var(--text-bright);
+  border-color: var(--accent-purple);
+}
+
+.sidebar-reopen-btn.hidden {
+  display: none;
 }
 
 /* Welcome Centerpiece Area */
