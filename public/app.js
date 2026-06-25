@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const activeModelNameEl = null; // removed from UI
   const statPesanEl = null;
   const statPromptEl = null;
-  
+
   // AI Chat Terminal Elements
   const aiChatBox = document.getElementById('ai-chat-box');
   const welcomeCenterpiece = document.getElementById('welcome-centerpiece');
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     threads.unshift(newThread);
     saveThreadsToStorage();
-    
+
     currentThreadId = id;
     renderThreadsSidebar();
     loadThreadMessages(id);
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function deleteThread(id, e) {
     if (e) e.stopPropagation();
     if (isStreaming) return;
-    
+
     threads = threads.filter(t => t.id !== id);
     saveThreadsToStorage();
 
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
     }
-    
+
     renderThreadsSidebar();
     loadThreadMessages(currentThreadId);
   }
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    
+
     updateSessionStatistics(thread);
     aiChatBox.scrollTop = aiChatBox.scrollHeight;
   }
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const activeClass = t.id === currentThreadId ? 'active' : '';
       const div = document.createElement('div');
       div.className = `thread-item ${activeClass}`;
-      
+
       div.innerHTML = `
         <div class="thread-title-wrapper">
           <i class="fa-regular fa-message thread-icon"></i>
@@ -277,7 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Prepare AI streaming bubble container
     isStreaming = true;
     activeStreamBuffer = "";
-    
+
+    // Change icon to square (stop) using SVG
+    sendAiBtn.innerHTML = `
+      <svg id="btn-icon-svg" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+        <path d="M6 6h12v12H6z"/>
+      </svg>
+    `;
+    sendAiBtn.classList.add('is-streaming');
+
     // Create streaming bubble on UI
     const aiBubbleRow = document.createElement('div');
     aiBubbleRow.className = 'msg-row ai-side';
@@ -312,7 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on('prompt-chunk', (data) => {
     if (data.chatId !== currentThreadId) return;
-    
+    if (!isStreaming) return;
+
     activeStreamBuffer += data.text;
     const streamRow = document.getElementById('active-streaming-row');
     if (streamRow) {
@@ -324,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   socket.on('prompt-end', (data) => {
     if (data.chatId !== currentThreadId) return;
+    if (!isStreaming) return;
 
     const streamRow = document.getElementById('active-streaming-row');
     if (streamRow) {
@@ -333,13 +343,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     saveMessageToThread('ai', activeStreamBuffer);
-    
+
     // Post generation stats updates
     const activeThread = threads.find(t => t.id === currentThreadId);
     updateSessionStatistics(activeThread);
 
     isStreaming = false;
     activeStreamBuffer = "";
+
+    sendAiBtn.innerHTML = `
+      <svg id="btn-icon-svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+        <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/>
+      </svg>
+    `;
+    sendAiBtn.classList.remove('is-streaming');
   });
 
   function saveMessageToThread(sender, text) {
@@ -360,7 +377,9 @@ document.addEventListener('DOMContentLoaded', () => {
     row.innerHTML = `
       <div class="chat-bubble">${escapeHtml(text)}</div>
       <div class="user-avatar">
-        <i class="fa-solid fa-user"></i>
+        <svg viewBox="0 0 24 24" fill="#ffffff" width="20" height="20">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 10.17 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/>
+        </svg>
       </div>
     `;
     aiChatBox.appendChild(row);
@@ -370,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderAiBubble(text) {
     const row = document.createElement('div');
     row.className = 'msg-row ai-side';
-    
+
     const parsedContent = parseMarkdownToHtml(text);
     row.innerHTML = `
       <div class="ai-avatar" style="padding: 0; background: transparent; box-shadow: none;">
@@ -378,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="chat-bubble">${parsedContent}</div>
     `;
-    
+
     aiChatBox.appendChild(row);
     aiChatBox.scrollTop = aiChatBox.scrollHeight;
   }
@@ -391,9 +410,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  sendAiBtn.addEventListener('click', () => handlePromptSubmit());
-  
-  aiChatInput.addEventListener('input', function() {
+  sendAiBtn.addEventListener('click', () => {
+    if (isStreaming) {
+      isStreaming = false;
+      sendAiBtn.innerHTML = `
+        <svg id="btn-icon-svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+          <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/>
+        </svg>
+      `;
+      sendAiBtn.classList.remove('is-streaming');
+
+      const streamRow = document.getElementById('active-streaming-row');
+      if (streamRow) {
+        streamRow.removeAttribute('id');
+        const bubble = streamRow.querySelector('.chat-bubble');
+        bubble.innerHTML = parseMarkdownToHtml(activeStreamBuffer);
+        saveMessageToThread('ai', activeStreamBuffer);
+      }
+      activeStreamBuffer = "";
+    } else {
+      handlePromptSubmit();
+    }
+  });
+
+  aiChatInput.addEventListener('input', function () {
     this.style.height = 'auto';
     this.style.height = (this.scrollHeight - 4) + 'px';
   });
@@ -418,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
     html = html.replace(codeBlockRegex, (match, lang, codeContent) => {
       const cleanLang = lang || 'text';
       const highlightedCode = colorizeCodeSyntax(codeContent.trim(), cleanLang);
-      
+
       return `
         <pre><code class="language-${cleanLang}">${highlightedCode}</code><button class="code-copy-btn" onclick="copyCodeBlock(this)"><i class="fa-regular fa-clipboard"></i> Copy</button></pre>
       `;
@@ -433,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let tableHtml = '<table>';
       let hasHeader = false;
       const isDelimiter = rows[1].includes('-') && rows[1].includes('|');
-      
+
       rows.forEach((row, index) => {
         if (index === 1 && isDelimiter) {
           hasHeader = true;
@@ -483,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
     paragraphs.forEach(p => {
       const trimmed = p.trim();
       if (!trimmed) return;
-      
+
       if (trimmed.startsWith('<pre>') || trimmed.startsWith('<table>') || trimmed.startsWith('<h') || trimmed.startsWith('<ul>') || trimmed.startsWith('<ol>') || trimmed.startsWith('<blockquote>')) {
         finalHtml += trimmed;
       } else {
@@ -504,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function colorizeCodeSyntax(code, lang) {
     let escaped = escapeHtml(code);
-    
+
     if (lang === 'javascript' || lang === 'js' || lang === 'html') {
       escaped = escaped.replace(/(\/\/[^\n]*)/g, '<span class="code-comment">$1</span>');
       escaped = escaped.replace(/(['"`][^'"`]*['"`])/g, '<span class="code-string">$1</span>');
@@ -513,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
       escaped = escaped.replace(/\b(\d+)\b/g, '<span class="code-number">$1</span>');
       escaped = escaped.replace(/\b(true|false|null|undefined)\b/g, '<span class="code-boolean">$1</span>');
       escaped = escaped.replace(/\b(\w+)(?=\()/g, '<span class="code-function">$1</span>');
-    } 
+    }
     else if (lang === 'python' || lang === 'py') {
       escaped = escaped.replace(/(#[^\n]*)/g, '<span class="code-comment">$1</span>');
       escaped = escaped.replace(/(['"][^'"]*['"])/g, '<span class="code-string">$1</span>');
@@ -527,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return escaped;
   }
 
-  window.copyCodeBlock = function(btn) {
+  window.copyCodeBlock = function (btn) {
     const pre = btn.parentNode;
     const code = pre.querySelector('code');
     if (!code) return;
@@ -535,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.clipboard.writeText(code.innerText).then(() => {
       btn.innerHTML = `<i class="fa-solid fa-circle-check text-green"></i> Copied!`;
       btn.style.borderColor = 'var(--accent-green)';
-      
+
       setTimeout(() => {
         btn.innerHTML = `<i class="fa-regular fa-clipboard"></i> Copy`;
         btn.style.borderColor = 'rgba(255, 255, 255, 0.06)';
@@ -570,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Live update temperature display and save
   if (settingTemperatureInline) {
-    settingTemperatureInline.addEventListener('input', function() {
+    settingTemperatureInline.addEventListener('input', function () {
       if (temperatureValInline) temperatureValInline.textContent = this.value;
       aiSettings.temperature = parseFloat(this.value);
       localStorage.setItem('nails_ai_settings', JSON.stringify(aiSettings));
@@ -579,7 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Old modal temperature slider (keep for modal if still present)
   if (settingTemperature) {
-    settingTemperature.addEventListener('input', function() {
+    settingTemperature.addEventListener('input', function () {
       if (temperatureVal) temperatureVal.textContent = this.value;
     });
   }
@@ -588,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleKeyVisibility.addEventListener('click', () => {
       const type = settingApiKey.getAttribute('type') === 'password' ? 'text' : 'password';
       settingApiKey.setAttribute('type', type);
-      
+
       const icon = toggleKeyVisibility.querySelector('i');
       if (type === 'text') {
         icon.className = 'fa-solid fa-eye';
@@ -638,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
       '"': '&quot;',
       "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
   }
 
   // Run initialization
