@@ -486,13 +486,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const row = document.createElement('div');
     row.className = 'msg-row user-side';
     row.innerHTML = `
-      <div class="chat-bubble">${escapeHtml(text)}</div>
+      <div class="user-bubble-wrapper">
+        <div class="chat-bubble">${escapeHtml(text)}</div>
+        <div class="msg-actions">
+          <button class="msg-action-btn copy-msg-btn" title="Salin pesan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+          <button class="msg-action-btn edit-msg-btn" title="Edit pesan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
       <div class="user-avatar">
         <svg viewBox="0 0 24 24" fill="#ffffff" width="20" height="20">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 10.17 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/>
         </svg>
       </div>
     `;
+
+    // Copy button handler
+    const copyBtn = row.querySelector('.copy-msg-btn');
+    copyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        copyBtn.style.color = 'var(--accent-green, #4ade80)';
+        setTimeout(() => {
+          copyBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          `;
+          copyBtn.style.color = '';
+        }, 2000);
+      });
+    });
+
+    // Edit button handler
+    const editBtn = row.querySelector('.edit-msg-btn');
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      aiChatInput.value = text;
+      aiChatInput.style.height = 'auto';
+      aiChatInput.style.height = (aiChatInput.scrollHeight - 4) + 'px';
+      aiChatInput.focus();
+    });
+
     aiChatBox.appendChild(row);
     aiChatBox.scrollTop = aiChatBox.scrollHeight;
   }

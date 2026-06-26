@@ -876,6 +876,50 @@ body {
   border-top-right-radius: 4px;
 }
 
+/* User bubble wrapper: stacks bubble + action icons vertically */
+.user-bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+/* Message action icons row (copy, edit) */
+.msg-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.user-side:hover .msg-actions {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.msg-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.msg-action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-bright);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 /* Cursor typing effect */
 .typing-caret {
   display: inline-block;

@@ -61,5 +61,12 @@
     "prompt": "haii",
     "response": "Haii! Senang bertemu denganmu! Apa yang kamu inginkan bicarakan hari ini?",
     "model": "llama-3.1-8b-instant"
+  },
+  {
+    "timestamp": "2026-06-26T02:23:12.325Z",
+    "user": "NailsDev",
+    "prompt": "buatkan resep nasi goreng yang enak bumbu sederhana",
+    "response": "Berikut adalah resep nasi goreng yang enak dengan bumbu sederhana:\n\n**Bahan-bahan:**\n\n* 2 cup nasi putih yang dingin\n* 2 sendok makan minyak goreng\n* 1 siung bawang putih, cincang\n* 1 siung bawang merah, cincang\n* 1 cabai rawit, cincang (opsional)\n* 1 butir telur\n* 1 sendok teh kecap manis\n* 1 sendok teh kecap asin\n* 1/2 sendok teh garam\n* 1/4 sendok teh lada bubuk\n* 2 sendok makan ayam suwir (opsional)\n* 2 sendok makan daun bawang, iris\n* 1 sendok makan bawang goreng (opsional)\n\n**Cara membuat:**\n\n1. Panaskan minyak goreng dalam wajan besar di atas api sedang.\n2. Tumis bawang putih, bawang merah, dan cabai rawit (jika menggunakan) hingga harum.\n3. Masukkan telur dan orak-arik hingga setengah matang.\n4. Masukkan nasi putih yang dingin dan aduk rata dengan telur.\n5. Tambahkan kecap manis, kecap asin, garam, dan lada bubuk. Aduk rata.\n6. Masukkan ayam suwir (jika menggunakan) dan aduk rata.\n7. Biarkan nasi goreng matang selama 5-7 menit, sambil terus diaduk.\n8. Tambahkan daun bawang dan bawang goreng (jika menggunakan) dan aduk rata.\n9. Sajikan nasi goreng yang enak dan lezat!\n\n**Tips:**\n\n* Gunakan nasi putih yang dingin agar nasi goreng tidak lengket.\n* Jangan terlalu banyak menambahkan kecap asin, karena dapat membuat nasi goreng terlalu asin.\n* Jika ingin membuat nasi goreng lebih lezat, tambahkan sedikit kecap manis dan garam sebelum disajikan.\n\nSemoga resep ini membantu Anda membuat nasi goreng yang enak dan lezat!",
+    "model": "llama-3.1-8b-instant"
   }
 ]
